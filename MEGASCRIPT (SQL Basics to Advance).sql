@@ -559,6 +559,7 @@ DELIMITER ;
 
 SHOW VARIABLES LIKE 'event%';
 
+--Topics I find difficult in https://www.sql-practice.com/
 
 --UPDATE and SET
 
@@ -569,3 +570,48 @@ WHERE (INSERT condition);
 UPDATE patients
 SET allergies = 'NKA'
 WHERE allergies is NULL;
+
+-- Showing a total number of the same value of a row
+--sol.1
+SELECT COUNT(birth_date) AS total_patients
+FROM patients
+WHERE YEAR(birth_date) = 2010;
+--sol.2
+SELECT count(first_name) AS total_patients
+FROM patients
+WHERE
+  birth_date >= '2010-01-01'
+  AND birth_date <= '2010-12-31'
+--sol.3
+SELECT count(first_name) AS total_patients
+FROM patients
+WHERE
+  birth_date between '2010-01-01' AND '2010-12-31'
+
+--MAX and MIN (singling out the highest or lowest)
+select first_name, last_name, MAX(height) as height
+from patients
+
+-- Selecting out multiple different values in column
+select *
+from patients
+where patient_id in (1,45,534,879,1000);
+
+-- Listing all unique names in a column
+
+select first_name
+from patients
+group by first_name
+having Count(first_name) = 1
+
+-- or 
+
+SELECT first_name
+FROM (
+    SELECT
+      first_name,
+      count(first_name) AS occurrencies
+    FROM patients
+    GROUP BY first_name
+  )
+WHERE occurrencies = 1
